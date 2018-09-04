@@ -19,9 +19,10 @@ class LoginScreen extends Component {
     }
 
     login() {
-        if (this.props.login.username != "bagus" && this.props.login.password != "pass.123") {
-            this.errorAlert();
-        }
+        // if (this.props.login.username != "bagus" && this.props.login.password != "pass.123") {
+        //     this.errorAlert();
+        // }
+        this.props.serviceLogin(this.props.login.username, this.props.login.password);
     }
 
     render() {
@@ -82,6 +83,9 @@ const mapDispatchToProps = (dispatch) => {
         },
         setPassword: (password) => {
             dispatch(setPassword(password));
+        },
+        setLogin: (username, password) => {
+            dispatch(serviceLogin(username,password));
         }
     }
 }
