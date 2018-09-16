@@ -22,6 +22,7 @@ export default class OlahragoApp extends Component {
     }
     render() {
         if (!this.state.isReady) {
+            console.log(this.state.isReady)
             return <Expo.AppLoading /> ;
         }
         return (

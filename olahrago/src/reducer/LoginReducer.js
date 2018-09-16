@@ -5,7 +5,7 @@ const loginReducer = (state = {
     password: null,
     isLoading: false,
     message: null,
-    data: {}
+    response: {}
 }, action) => {
     switch (action.type) {
         case Action.SET_USERNAME:
@@ -20,7 +20,7 @@ const loginReducer = (state = {
                 password: action.payload
             }
             break;
-        case Action.SERVICE_ERROR:
+        case Action.SERVICE_FAIL:
             state = {
                 ...state,
                 message: action.payload,
@@ -37,8 +37,18 @@ const loginReducer = (state = {
             state = {
                 ...state,
                 isLoading: false,
-                data: payload.data
+                response: action.payload,
+                message: action.payload.message
             }
+            break;
+        case Action.SERVICE_LOAD:
+            state = {
+                ...state,
+                password: null,
+                isLoading: true,
+                response: action.payload
+            }
+            break;
     }
     return state;
 }

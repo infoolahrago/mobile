@@ -1,6 +1,7 @@
-export const SERVICE_PENDING = "service_pending"
-export const SERVICE_ERROR = "service_error"
-export const SERVICE_SUCCESS = "service_success"
+export const SERVICE_PENDING = "SERVICE_PENDING"
+export const SERVICE_FAIL = "SERVICE_FAIL"
+export const SERVICE_SUCCESS = "SERVICE_SUCCESS"
+export const SERVICE_LOAD = "SERVICE_FETCH"
 
 //login action
 export const SET_USERNAME = "set_username"

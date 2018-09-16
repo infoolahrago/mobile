@@ -1,16 +1,25 @@
 import React, { Component } from 'react';
 import { connect } from "react-redux";
 import { Container, Header, Content, Form, Item, Input, Label, Text, Button, Col, Grid } from 'native-base';
-import { Alert } from 'react-native';
-import { setUsername, setPassword } from "../action/LoginAction";
-import loginStore from "../store/LoginStore";
+import { Alert, AsyncStorage } from 'react-native';
+import { ActionSetUsername, ActionSetPassword, ServiceLogin} from "../action/LoginAction";
+
 
 class LoginScreen extends Component {
+    componentWillReceiveProps(next_props) {
+        if (Object.keys(next_props.login.response).length > 0) {
+            this.ErrorAlert(next_props.login.message);
+            
+            if (next_props.login.response.status == true) {
+                AsyncStorage.setItem("jwt_tokens", next_props.login.response.data);
+            }
+        }
+    }
 
-    errorAlert() {
+    ErrorAlert(message) {
         Alert.alert(
-            'Error',
-            'Username or Password does not match',
+            'Information',
+            message,
             [
                 {text: 'OK'},
             ],
@@ -18,11 +27,17 @@ class LoginScreen extends Component {
         )
     }
 
-    login() {
-        // if (this.props.login.username != "bagus" && this.props.login.password != "pass.123") {
-        //     this.errorAlert();
-        // }
-        this.props.serviceLogin(this.props.login.username, this.props.login.password);
+    Login() {
+        this.props.SetLogin(this.props.login.username, this.props.login.password);
+    }
+
+    SignUp() {
+        const jwt = AsyncStorage.getItem("jwt_token")
+        .then((key) => {
+            return key;
+        });
+
+        console.log(jwt);
     }
 
     render() {
@@ -34,11 +49,11 @@ class LoginScreen extends Component {
                 }}>
                     <Item floatingLabel>
                         <Label>Username</Label>
-                        <Input onChangeText={(username) => this.props.setUsername(username)}/>
+                        <Input onChangeText={(username) => this.props.SetUsername(username)}/>
                     </Item>
                     <Item floatingLabel last>
                         <Label>Password</Label>
-                        <Input onChangeText={(password) => this.props.setPassword(password) }/>
+                        <Input onChangeText={(password) => this.props.SetPassword(password) }/>
                     </Item>
                 </Form>
                 <Grid>
@@ -49,7 +64,7 @@ class LoginScreen extends Component {
                             marginLeft: 50,
                             alignSelf: "center"
                         }}
-                        onPress={this.login.bind(this)}
+                        onPress={this.Login.bind(this)}
                         >
                             <Text>Sign In</Text>
                         </Button>
@@ -60,7 +75,9 @@ class LoginScreen extends Component {
                             marginTop: 20,
                             marginRight: 50,
                             alignSelf: "center"
-                        }}>
+                        }}
+                        onPress={this.SignUp.bind(this)}
+                        >
                             <Text>Sign Up</Text>
                     </Button></Col>
                 </Grid>
@@ -78,14 +95,14 @@ const mapStateToProps = (state) => {
 
 const mapDispatchToProps = (dispatch) => {
     return {
-        setUsername: (username) => {
-            dispatch(setUsername(username));
+        SetUsername: (username) => {
+            dispatch(ActionSetUsername(username));
         },
-        setPassword: (password) => {
-            dispatch(setPassword(password));
+        SetPassword: (password) => {
+            dispatch(ActionSetPassword(password));
         },
-        setLogin: (username, password) => {
-            dispatch(serviceLogin(username,password));
+        SetLogin: (username, password) => {
+            dispatch(ServiceLogin(username,password));
         }
     }
 }
